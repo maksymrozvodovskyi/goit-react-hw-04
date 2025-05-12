@@ -1,19 +1,12 @@
-import { useState } from "react";
 import css from "./SearchBar.module.css";
 
 export default function SearchBar({ onSubmit }) {
-  const [search, setSearch] = useState("");
-
-  const handleInput = (event) => {
-    setSearch(event.target.value);
-  };
-
   const handleSubmit = (event) => {
     event.preventDefault();
 
-    onSubmit(search);
+    onSubmit(event.target.elements.search.value);
 
-    setSearch("");
+    event.target.reset();
   };
 
   return (
@@ -25,7 +18,6 @@ export default function SearchBar({ onSubmit }) {
           autoComplete="off"
           autoFocus
           placeholder="Search images and photos"
-          onInput={handleInput}
         />
         <button type="submit">Search</button>
       </form>
@@ -33,4 +25,4 @@ export default function SearchBar({ onSubmit }) {
   );
 }
 
-// cZrUXKvs2_3Ih1ZnCPXpAr9jZVD - SOii34Zobyj9hPE;
+// cZrUXKvs2_3Ih1ZnCPXpAr9jZVD - SOii34Zobyj9hPE
