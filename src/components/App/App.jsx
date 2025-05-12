@@ -8,10 +8,17 @@ import axios from "axios";
 export default function App() {
   const [images, setImages] = useState([]);
 
-  const handleSearch = (newImage) => {
-    axios.get(
-      `https://api.unsplash.com/photos/?query=${newImage}&client_id=cZrUXKvs2_3Ih1ZnCPXpAr9jZVD-SOii34Zobyj9hPE`
-    );
+  const handleSearch = async (newImage) => {
+    try {
+      if (newImage === "") {
+        return;
+      }
+      const response = await axios.get(
+        `https://api.unsplash.com/search/photos/?query=${newImage}&client_id=cZrUXKvs2_3Ih1ZnCPXpAr9jZVD-SOii34Zobyj9hPE`
+      );
+
+      setImages(response.data.results);
+    } catch (error) {}
   };
 
   return (
