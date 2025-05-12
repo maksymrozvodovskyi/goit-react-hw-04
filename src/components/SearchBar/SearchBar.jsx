@@ -24,5 +24,3 @@ export default function SearchBar({ onSubmit }) {
     </header>
   );
 }
-
-// cZrUXKvs2_3Ih1ZnCPXpAr9jZVD - SOii34Zobyj9hPE
