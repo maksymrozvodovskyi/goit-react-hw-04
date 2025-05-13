@@ -8,8 +8,8 @@ export const fetchData = async (image, currentPage) => {
       query: image,
       client_id: "cZrUXKvs2_3Ih1ZnCPXpAr9jZVD-SOii34Zobyj9hPE",
       page: currentPage,
-      per_page: 20,
+      per_page: 30,
     },
   });
-  return response.data.results;
+  return response.data;
 };

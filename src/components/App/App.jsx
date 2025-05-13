@@ -17,6 +17,7 @@ export default function App() {
 
   const [input, setInput] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(0);
 
   const handleSearch = async (newImage) => {
     setInput(newImage);
@@ -37,8 +38,9 @@ export default function App() {
       try {
         setIsError(false);
         setIsLoading(true);
-        const newImages = await fetchData(input, currentPage);
-        setImages((prevImages) => [...prevImages, ...newImages]);
+        const data = await fetchData(input, currentPage);
+        setTotalPages(data.total_pages);
+        setImages((prevImages) => [...prevImages, ...data.results]);
       } catch {
         setIsError(true);
       } finally {
@@ -49,13 +51,17 @@ export default function App() {
     fetchImages();
   }, [currentPage, input]);
 
+  const isLastPage = currentPage === totalPages - 1;
+
   return (
     <div>
       <SearchBar onSubmit={handleSearch} />
       {images.length > 0 && <ImageGallery data={images} />}
       {isError && <ErrorMessage />}
       {isLoading && <Loader />}
-      <LoadMoreBtn onClick={incrementPage} />
+      {!isLoading && images.length > 0 && !isLastPage && (
+        <LoadMoreBtn onClick={incrementPage} />
+      )}
     </div>
   );
 }
