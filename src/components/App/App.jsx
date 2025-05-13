@@ -9,6 +9,7 @@ import ImageGallery from "../ImageGallery/ImageGallery";
 import Loader from "../Loader/Loader";
 import ErrorMessage from "../ErrorMessage/ErrorMessage";
 import LoadMoreBtn from "../LoadMoreBtn/LoadMoreBtn";
+import ImageModal from "../ImageModal/ImageModal";
 
 export default function App() {
   const [images, setImages] = useState([]);
@@ -17,7 +18,20 @@ export default function App() {
 
   const [input, setInput] = useState("");
   const [currentPage, setCurrentPage] = useState(1);
-  const [totalPages, setTotalPages] = useState(0);
+
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [modalImageUrl, setModalImageUrl] = useState("");
+  const [modalAlt, setModalAlt] = useState("");
+
+  const openModal = (url, alt) => {
+    setModalImageUrl(url);
+    setModalAlt(alt);
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+  };
 
   const handleSearch = async (newImage) => {
     setInput(newImage);
@@ -39,7 +53,6 @@ export default function App() {
         setIsError(false);
         setIsLoading(true);
         const data = await fetchData(input, currentPage);
-        setTotalPages(data.total_pages);
         setImages((prevImages) => [...prevImages, ...data.results]);
       } catch {
         setIsError(true);
@@ -51,17 +64,21 @@ export default function App() {
     fetchImages();
   }, [currentPage, input]);
 
-  const isLastPage = currentPage === totalPages - 1;
-
   return (
     <div>
       <SearchBar onSubmit={handleSearch} />
-      {images.length > 0 && <ImageGallery data={images} />}
+      {images.length > 0 && <ImageGallery data={images} onClick={openModal} />}
       {isError && <ErrorMessage />}
       {isLoading && <Loader />}
-      {!isLoading && images.length > 0 && !isLastPage && (
+      {!isLoading && images.length > 0 && (
         <LoadMoreBtn onClick={incrementPage} />
       )}
+      <ImageModal
+        isOpen={isModalOpen}
+        onRequestClose={closeModal}
+        imageUrl={modalImageUrl}
+        alt={modalAlt}
+      />
     </div>
   );
 }
