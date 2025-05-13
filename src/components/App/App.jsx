@@ -1,35 +1,53 @@
 import css from "./App.module.css";
 import axios from "axios";
 
-import { useState } from "react";
+import { use, useEffect, useState } from "react";
 import { fetchData } from "../../unsplash-api";
 
 import SearchBar from "../SearchBar/SearchBar";
 import ImageGallery from "../ImageGallery/ImageGallery";
 import Loader from "../Loader/Loader";
 import ErrorMessage from "../ErrorMessage/ErrorMessage";
+import LoadMoreBtn from "../LoadMoreBtn/LoadMoreBtn";
 
 export default function App() {
   const [images, setImages] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [isError, setIsError] = useState(false);
 
+  const [input, setInput] = useState("");
+  const [currentPage, setCurrentPage] = useState(1);
+
   const handleSearch = async (newImage) => {
-    try {
-      if (newImage === "") {
-        return;
-      }
-      setIsError(false);
-      setImages([]);
-      setIsLoading(true);
-      const data = await fetchData(newImage);
-      setImages(data);
-    } catch {
-      setIsError(true);
-    } finally {
-      setIsLoading(false);
-    }
+    setInput(newImage);
+    setCurrentPage(1);
+    setImages([]);
   };
+
+  const incrementPage = () => {
+    setCurrentPage(currentPage + 1);
+  };
+
+  useEffect(() => {
+    if (input === "") {
+      return;
+    }
+
+    async function fetchImages() {
+      try {
+        setIsError(false);
+        setIsLoading(true);
+        const newImages = await fetchData(input, currentPage);
+        setImages((prevImages) => [...prevImages, ...newImages]);
+      } catch {
+        setIsError(true);
+      } finally {
+        setIsLoading(false);
+      }
+    }
+
+    fetchImages();
+  }, [currentPage, input]);
 
   return (
     <div>
@@ -37,6 +55,7 @@ export default function App() {
       {images.length > 0 && <ImageGallery data={images} />}
       {isError && <ErrorMessage />}
       {isLoading && <Loader />}
+      <LoadMoreBtn onClick={incrementPage} />
     </div>
   );
 }
