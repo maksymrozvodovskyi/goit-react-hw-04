@@ -3,9 +3,9 @@ import ImageCard from "./ImageCard/ImageCard";
 
 export default function ImageGallery({ data, onClick }) {
   return (
-    <ul>
+    <ul className={css.list}>
       {data.map((data) => (
-        <li key={data.id}>
+        <li key={data.id} className={css.item}>
           <ImageCard
             data={data}
             onClick={() => {
