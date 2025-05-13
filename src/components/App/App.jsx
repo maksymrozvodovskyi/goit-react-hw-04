@@ -44,9 +44,9 @@ export default function App() {
   };
 
   useEffect(() => {
-    // if (input === "") {
-    //   return;
-    // }
+    if (input === "") {
+      return;
+    }
 
     async function fetchImages() {
       try {
