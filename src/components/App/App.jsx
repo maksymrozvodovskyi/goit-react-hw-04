@@ -1,7 +1,7 @@
 import css from "./App.module.css";
 import axios from "axios";
 
-import { use, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { fetchData } from "../../unsplash-api";
 
 import SearchBar from "../SearchBar/SearchBar";
@@ -44,9 +44,9 @@ export default function App() {
   };
 
   useEffect(() => {
-    if (input === "") {
-      return;
-    }
+    // if (input === "") {
+    //   return;
+    // }
 
     async function fetchImages() {
       try {
